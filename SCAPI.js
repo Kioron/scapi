@@ -83,6 +83,116 @@ const connection = mysql.createConnection({
   });
 });
 
+app.get('/homenewstbl', (req, res) => {
+  connection.query('SELECT * FROM HomeNewstbl', (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/homecommenttbl', (req, res) => {
+  connection.query('SELECT * FROM HomeCommenttbl', (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/policenewstbl', (req, res) => {
+  connection.query('SELECT * FROM PoliceNewstbl', (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/policecommenttbl', (req, res) => {
+  connection.query('SELECT * FROM PoliceCommenttbl', (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/policeannouncementtbl', (req, res) => {
+  connection.query('SELECT * FROM PoliceAnnouncementtbl', (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/emsnewstbl', (req, res) => {
+  connection.query('SELECT * FROM EMSNewstbl', (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/emscommenttbl', (req, res) => {
+  connection.query('SELECT * FROM EMSCommenttbl', (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/emsannouncementtbl', (req, res) => {
+  connection.query('SELECT * FROM EMSAnnouncementtbl', (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/mechanicsnewstbl', (req, res) => {
+  connection.query('SELECT * FROM MechanicsNewstbl', (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/mechanicscommenttbl', (req, res) => {
+  connection.query('SELECT * FROM MechanicsCommenttbl', (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/mechanicsannouncementtbl', (req, res) => {
+  connection.query('SELECT * FROM MechanicsAnnouncementtbl', (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 app.listen(port, () => {
    console.log(`Server running on http://localhost:${port}/users`);
 });
