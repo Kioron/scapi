@@ -1,200 +1,185 @@
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
 
 const app = express();
 const port = 3000;
 
-app.use(express.json())
-
+app.use(express.json());
 app.use(cors());
 
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
     host: 'b5dip6jker9pcnf3utnu-mysql.services.clever-cloud.com',
     user: 'us4g92sotpxxbk9o',
     password: 'GDZEvbhGQfKyXAdIlss7',
-    database: 'b5dip6jker9pcnf3utnu'
-  });
+    database: 'b5dip6jker9pcnf3utnu',
+    waitForConnections: true,
+    connectionLimit: 5,
+    queueLimit: 0
+});
 
-  connection.connect((err) => {
-    if (err) {
-      console.error('Connection failed:', err);
-      return;
-    }
-    console.log('Connected to MySQL database!');
-  });
-
-  app.get('/users', (req, res) => {
-    connection.query('SELECT * FROM b5dip6jker9pcnf3utnu.UserManagementtbl', (err, users) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.json(users);
-      }
-    });
-  });
-
-  app.post('/users', async (req, res) => {
+app.get('/users', async (req, res) => {
     try {
-      const hashedPassword = await bcrypt.hash(req.body.Password, 10);
-      const user = {
-          UserName: req.body.UserName,
-          Password: hashedPassword,
-          UserEmail: req.body.UserEmail,
-      };
-      connection.query('INSERT INTO UserManagementtbl SET ?', user, (err, result) => {
-          if (err) {
-            console.error('Error inserting user:', err);
-              res.status(500).send(err);
-          } else {
-            console.log('User created successfully:', result);
-              res.status(201).send('User created successfully');
-          }
-      });
-  } catch (err) {
-    console.error('Error registering user:', err);
-      res.status(500).send(err);
-  }
+        const [rows] = await pool.query('SELECT * FROM UserManagementtbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching users:', err);
+        res.status(500).send(err);
+    }
 });
 
-  app.post('/users/login', async (req, res) => {
+app.post('/users', async (req, res) => {
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.Password, 10);
+        const user = {
+            UserName: req.body.UserName,
+            Password: hashedPassword,
+            UserEmail: req.body.UserEmail,
+        };
+        const [result] = await pool.query('INSERT INTO UserManagementtbl SET ?', user);
+        console.log('User created successfully:', result);
+        res.status(201).send('User created successfully');
+    } catch (err) {
+        console.error('Error registering user:', err);
+        res.status(500).send(err);
+    }
+});
+
+app.post('/users/login', async (req, res) => {
     const { UserName, Password } = req.body;
-    connection.query('SELECT * FROM UserManagementtbl WHERE UserName = ?', [UserName], async (err, results) => {
-      if (err) {
-          console.error('Error fetching user:', err);
-          res.status(500).send(err);
-      } else if (results.length === 0) {
-          res.status(400).send('Cannot find user');
-      } else {
-          const user = results[0];
-          try {
-              if (await bcrypt.compare(Password, user.Password)) {
-                  console.log('Login successful for user:', UserName);
-                  res.send('Success');
-              } else {
-                  console.log('Login failed for user:', UserName);
-                  res.send('Not Allowed');
-              }
-          } catch (err) {
-              res.status(500).send(err);
-          }
-      }
-  });
+    try {
+        const [results] = await pool.query('SELECT * FROM UserManagementtbl WHERE UserName = ?', [UserName]);
+        if (results.length === 0) {
+            res.status(400).send('Cannot find user');
+        } else {
+            const user = results[0];
+            if (await bcrypt.compare(Password, user.Password)) {
+                console.log('Login successful for user:', UserName);
+                res.send('Success');
+            } else {
+                console.log('Login failed for user:', UserName);
+                res.send('Not Allowed');
+            }
+        }
+    } catch (err) {
+        console.error('Error logging in:', err);
+        res.status(500).send(err);
+    }
 });
 
-app.get('/homenewstbl', (req, res) => {
-  connection.query('SELECT * FROM HomeNewstbl', (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+app.get('/homenewstbl', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM HomeNewstbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching home news:', err);
+        res.status(500).send(err);
     }
-  });
 });
 
-app.get('/homecommenttbl', (req, res) => {
-  connection.query('SELECT * FROM HomeCommenttbl', (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+app.get('/homecommenttbl', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM HomeCommenttbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching home comments:', err);
+        res.status(500).send(err);
     }
-  });
 });
 
-app.get('/policenewstbl', (req, res) => {
-  connection.query('SELECT * FROM PoliceNewstbl', (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+app.get('/policenewstbl', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM PoliceNewstbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching police news:', err);
+        res.status(500).send(err);
     }
-  });
 });
 
-app.get('/policecommenttbl', (req, res) => {
-  connection.query('SELECT * FROM PoliceCommenttbl', (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+app.get('/policecommenttbl', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM PoliceCommenttbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching police comments:', err);
+        res.status(500).send(err);
     }
-  });
 });
 
-app.get('/policeannouncementtbl', (req, res) => {
-  connection.query('SELECT * FROM PoliceAnnouncementtbl', (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+app.get('/policeannouncementtbl', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM PoliceAnnouncementtbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching police announcements:', err);
+        res.status(500).send(err);
     }
-  });
 });
 
-app.get('/emsnewstbl', (req, res) => {
-  connection.query('SELECT * FROM EMSNewstbl', (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+app.get('/emsnewstbl', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM EMSNewstbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching EMS news:', err);
+        res.status(500).send(err);
     }
-  });
 });
 
-app.get('/emscommenttbl', (req, res) => {
-  connection.query('SELECT * FROM EMSCommenttbl', (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+app.get('/emscommenttbl', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM EMSCommenttbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching EMS comments:', err);
+        res.status(500).send(err);
     }
-  });
 });
 
-app.get('/emsannouncementtbl', (req, res) => {
-  connection.query('SELECT * FROM EMSAnnouncementtbl', (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+app.get('/emsannouncementtbl', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM EMSAnnouncementtbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching EMS announcements:', err);
+        res.status(500).send(err);
     }
-  });
 });
 
-app.get('/mechanicsnewstbl', (req, res) => {
-  connection.query('SELECT * FROM MechanicsNewstbl', (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+app.get('/mechanicsnewstbl', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM MechanicsNewstbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching mechanics news:', err);
+        res.status(500).send(err);
     }
-  });
 });
 
-app.get('/mechanicscommenttbl', (req, res) => {
-  connection.query('SELECT * FROM MechanicsCommenttbl', (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+app.get('/mechanicscommenttbl', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM MechanicsCommenttbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching mechanics comments:', err);
+        res.status(500).send(err);
     }
-  });
 });
 
-app.get('/mechanicsannouncementtbl', (req, res) => {
-  connection.query('SELECT * FROM MechanicsAnnouncementtbl', (err, results) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+app.get('/mechanicsannouncementtbl', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM MechanicsAnnouncementtbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching mechanics announcements:', err);
+        res.status(500).send(err);
     }
-  });
 });
 
 app.listen(port, () => {
-   console.log(`Server running on http://localhost:${port}/users`);
+    console.log(`Server running on http://localhost:${port}`);
 });
 
 module.exports = app;
