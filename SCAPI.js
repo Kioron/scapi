@@ -78,6 +78,21 @@ app.get('/homenewstbl', async (req, res) => {
     }
 });
 
+app.post('/homenewstbl', async (req, res) => {
+    try {
+        const news = {
+            Title: req.body.Title,
+            Content: req.body.Content,
+        };
+        const [result] = await pool.query('INSERT INTO HomeNewstbl SET ?', news);
+        console.log('News created successfully:', result);
+        res.status(201).send('News created successfully');
+    } catch (err) {
+        console.error('Error creating news:', err);
+        res.status(500).send(err);
+    }
+});
+
 app.get('/homecommenttbl', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM HomeCommenttbl');
