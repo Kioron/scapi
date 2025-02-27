@@ -68,6 +68,7 @@ app.post('/users/login', async (req, res) => {
     }
 });
 
+//home-get-post
 app.get('/homenewstbl', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM HomeNewstbl');
@@ -85,10 +86,8 @@ app.post('/homenewstbl', async (req, res) => {
             Content: req.body.Content,
         };
         const [result] = await pool.query('INSERT INTO HomeNewstbl SET ?', news);
-        console.log('News created successfully:', result);
         res.status(201).send('News created successfully');
     } catch (err) {
-        console.error('Error creating news:', err);
         res.status(500).send(err);
     }
 });
@@ -103,6 +102,19 @@ app.get('/homecommenttbl', async (req, res) => {
     }
 });
 
+app.post('/homecommenttbl', async (req, res) => {
+    try {
+        const comments = {
+            Content: req.body.Content,
+        };
+        const [result] = await pool.query('INSERT INTO HomeCommenttbl SET ?', comments);
+        res.status(201).send('Comment created successfully');
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
+//police-get-post
 app.get('/policenewstbl', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM PoliceNewstbl');
@@ -112,6 +124,19 @@ app.get('/policenewstbl', async (req, res) => {
         res.status(500).send(err);
     }
 });
+
+app.post('policenewstbl', async (req, res) => {
+    try {
+        const news = {
+            Title: req.body.Title,
+            Content: req.body.Content,
+        };
+        const [result] = await pool.query('INSERT INTO PoliceNewstbl SET ?', news);
+        res.status(201).send('News created successfully');
+    } catch(err) {
+        res.status(500).send(err);
+    }
+})
 
 app.get('/policecommenttbl', async (req, res) => {
     try {
@@ -123,6 +148,18 @@ app.get('/policecommenttbl', async (req, res) => {
     }
 });
 
+app.post('/policecommenttbl', async (req, res) => {
+    try {
+        const comments = {
+            Content: req.body.Content,
+        };
+        const [result] = await pool.query('INSERT INTO PoliceCommenttbl SET ?', comments);
+        res.status(201).send('Comment created successfully');
+    } catch (err) {
+        res.status(500).send('Error creating comment');
+    }
+})
+
 app.get('/policeannouncementtbl', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM PoliceAnnouncementtbl');
@@ -133,12 +170,40 @@ app.get('/policeannouncementtbl', async (req, res) => {
     }
 });
 
+app.post('/policeannouncementtbl', async (req, res) => {
+    try {
+        const announcements = {
+            Title: req.body.Title,
+            Content: req.body.Content,
+        };
+        const [result] = await pool.query('INSERT INTO PoliceAnnouncementtbl SET ?', announcements);
+        res.status(201).send('Announcement created successfully');
+    } catch (err) {
+        res.status(500).send('Error creating announcement');
+
+    }
+})
+
+//ems-get-post
 app.get('/emsnewstbl', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM EMSNewstbl');
         res.json(rows);
     } catch (err) {
         console.error('Error fetching EMS news:', err);
+        res.status(500).send(err);
+    }
+});
+
+app.post('/emsnewstbl', async (req, res) => {
+    try {
+        const news = {
+            Title: req.body.Title,
+            Content: req.body.Content,
+        };
+        const [result] = await pool.query('INSERT INTO EMSNewstbl SET ?', news);
+        res.status(201).send('News created successfully');
+    } catch (err) {
         res.status(500).send(err);
     }
 });
@@ -153,6 +218,18 @@ app.get('/emscommenttbl', async (req, res) => {
     }
 });
 
+app.post('/emscommenttbl', async (req, res) => {
+    try {
+        const comments = {
+            Content: req.body.Content,
+        }
+        const [result] = await pool.query('INSERT INTO EMSCommenttbl SET ?', comments);
+        res.status(201).send('Comment created successfully');
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
 app.get('/emsannouncementtbl', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM EMSAnnouncementtbl');
@@ -163,12 +240,39 @@ app.get('/emsannouncementtbl', async (req, res) => {
     }
 });
 
+app.post('/emsannouncementtbl', async (req, res) => {
+    try{
+        const announcements = {
+            Title: req.body.Title,
+            Content: req.body.Content,
+        }
+        const [result] = await pool.query('INSERT INTO EMSAnnouncmenttbl SET ?', announcements);
+        res.status(201).send('Announcement created successfully');
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
+//mechanics-get-post
 app.get('/mechanicsnewstbl', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM MechanicsNewstbl');
         res.json(rows);
     } catch (err) {
         console.error('Error fetching mechanics news:', err);
+        res.status(500).send(err);
+    }
+});
+
+app.post('/mechanicsnewstbl', async (req,res) => {
+    try {
+        const news = {
+            Title: req.body.Title,
+            Content: req.body.Content,
+        }
+        const [result] = await pool.query('INSERT INTO MechanicsNewstbl SET ?', news);
+        res.status(201).send('News created successfully');
+    } catch (err) {
         res.status(500).send(err);
     }
 });
@@ -183,12 +287,37 @@ app.get('/mechanicscommenttbl', async (req, res) => {
     }
 });
 
+app.post('/mechanicscommenttbl', async (req, res) => {
+    try {
+        const comments = {
+            Content: req.body.Content,
+        }
+        const [result] = await pool.query('INSERT INTO MechanicsCommenttbl SET ?', comments);
+        res.status(201).send('Comment created successfully');
+    } catch (err) {
+        res.status(500).send(err);
+    }
+})
+
 app.get('/mechanicsannouncementtbl', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM MechanicsAnnouncementtbl');
         res.json(rows);
     } catch (err) {
         console.error('Error fetching mechanics announcements:', err);
+        res.status(500).send(err);
+    }
+});
+
+app.post('/mechanicsannouncementtbl', async (req, res) => {
+    try {
+        const announcements = {
+            Title: req.body.Title,
+            Content: req.body.Content,
+        }
+        const [result] = await pool.query('INSERT INTO MechanicsAnnouncementtbl SET ?', announcements);
+        res.status(201).send('Announcement created successfully');
+    } catch (err) {
         res.status(500).send(err);
     }
 });
