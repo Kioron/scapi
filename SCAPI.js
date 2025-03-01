@@ -1,4 +1,5 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
@@ -46,6 +47,8 @@ app.post('/users', async (req, res) => {
     }
 });
 
+const jwtSecret = '4a20ab747d6e0e2afa9a5486ddc279d8d61b4dbd399c9c49ac24d1958082633799478a43d9b74c84f4f610fd8f7855126417cfa809d06d718c4a4d9f80063110';
+
 app.post('/users/login', async (req, res) => {
     const { UserName, Password } = req.body;
     try {
@@ -55,17 +58,31 @@ app.post('/users/login', async (req, res) => {
         } else {
             const user = results[0];
             if (await bcrypt.compare(Password, user.Password)) {
-                console.log('Login successful for user:', UserName);
-                res.send('Success');
+                const token = jwt.sign({ id: user.id, username: user.Username }, jwtSecret, { expiresIn: '1h'});
+                res.json({ token });
             } else {
-                console.log('Login failed for user:', UserName);
-                res.send('Not Allowed');
+                res.status(401).send('Not Allowed');
             }
         }
     } catch (err) {
         console.error('Error logging in:', err);
         res.status(500).send(err);
     }
+});
+
+const verifyToken = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1];
+    if (!token) return res.status(403).send('Token is required');
+
+    jwt.verify(token, '4a20ab747d6e0e2afa9a5486ddc279d8d61b4dbd399c9c49ac24d1958082633799478a43d9b74c84f4f610fd8f7855126417cfa809d06d718c4a4d9f80063110', (err, decoded) => {
+        if (err) return res.status(401).send('Invalid token');
+        req.user = decoded;
+        next();
+    });
+};
+
+app.get('/protected-route', verifyToken, (req, res) => {
+    res.send('This is a protected route');
 });
 
 //home-get-post
