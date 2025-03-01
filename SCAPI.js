@@ -54,19 +54,19 @@ app.post('/users/login', async (req, res) => {
     try {
         const [results] = await pool.query('SELECT * FROM UserManagementtbl WHERE UserName = ?', [UserName]);
         if (results.length === 0) {
-            res.status(400).send('Cannot find user');
+            res.status(400).json('Cannot find user');
         } else {
             const user = results[0];
             if (await bcrypt.compare(Password, user.Password)) {
                 const token = jwt.sign({ id: user.id, username: user.Username }, jwtSecret, { expiresIn: '1h'});
                 res.json({ token });
             } else {
-                res.status(401).send('Not Allowed');
+                res.status(401).json('Not Allowed');
             }
         }
     } catch (err) {
         console.error('Error logging in:', err);
-        res.status(500).send(err);
+        res.status(500).json(err);
     }
 });
 
