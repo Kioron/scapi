@@ -14,6 +14,8 @@ app.use(cors({
     allowedHeaders: 'Content-Type,Authorization'
 }));
 
+app.options('*', cors());
+
 const pool = mysql.createPool({
     host: 'b5dip6jker9pcnf3utnu-mysql.services.clever-cloud.com',
     user: 'us4g92sotpxxbk9o',
