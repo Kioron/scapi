@@ -1,5 +1,4 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
@@ -8,13 +7,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
-app.use(cors({
-    origin: 'http://127.0.0.1:5500',
-    methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: 'Content-Type,Authorization'
-}));
-
-app.options('*', cors());
+app.use(cors());
 
 const pool = mysql.createPool({
     host: 'b5dip6jker9pcnf3utnu-mysql.services.clever-cloud.com',
@@ -53,8 +46,6 @@ app.post('/users', async (req, res) => {
     }
 });
 
-const jwtSecret = '4a20ab747d6e0e2afa9a5486ddc279d8d61b4dbd399c9c49ac24d1958082633799478a43d9b74c84f4f610fd8f7855126417cfa809d06d718c4a4d9f80063110';
-
 app.post('/users/login', async (req, res) => {
     const { UserName, Password } = req.body;
     try {
@@ -64,10 +55,11 @@ app.post('/users/login', async (req, res) => {
         } else {
             const user = results[0];
             if (await bcrypt.compare(Password, user.Password)) {
-                const token = jwt.sign({ id: user.id, username: user.Username }, jwtSecret, { expiresIn: '1h'});
-                res.json({ token });
+                console.log('Login successful for user:', UserName);
+                res.send('Success');
             } else {
-                res.status(401).send('Not Allowed');
+                console.log('Login failed for user:', UserName);
+                res.send('Not Allowed');
             }
         }
     } catch (err) {
@@ -75,21 +67,6 @@ app.post('/users/login', async (req, res) => {
         res.status(500).send(err);
     }
 });
-
-const verifyToken = (req, res, next) => {
-    const token = req.headers['authorization']?.split(' ')[1];
-    if (!token) return res.status(403).send('Token is required');
-
-    jwt.verify(token, '4a20ab747d6e0e2afa9a5486ddc279d8d61b4dbd399c9c49ac24d1958082633799478a43d9b74c84f4f610fd8f7855126417cfa809d06d718c4a4d9f80063110', (err, decoded) => {
-        if (err) return res.status(401).send('Invalid token');
-        req.user = decoded;
-        next();
-    });
-};
-
-// app.get('/protected-route', verifyToken, (req, res) => {
-//     res.send('This is a protected route');
-// });
 
 //home-get-post
 app.get('/homenewstbl', async (req, res) => {
