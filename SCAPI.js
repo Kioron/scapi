@@ -87,9 +87,9 @@ const verifyToken = (req, res, next) => {
     });
 };
 
-app.get('/protected-route', verifyToken, (req, res) => {
-    res.send('This is a protected route');
-});
+// app.get('/protected-route', verifyToken, (req, res) => {
+//     res.send('This is a protected route');
+// });
 
 //home-get-post
 app.get('/homenewstbl', async (req, res) => {
