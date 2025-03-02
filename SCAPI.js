@@ -71,11 +71,12 @@ app.post('/users/login', async (req, res) => {
     }
 });
 
+//token verification middleware
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization']?.split(' ')[1];
     if (!token) return res.status(403).send('Token is required');
 
-    jwt.verify(token, '4a20ab747d6e0e2afa9a5486ddc279d8d61b4dbd399c9c49ac24d1958082633799478a43d9b74c84f4f610fd8f7855126417cfa809d06d718c4a4d9f80063110', (err, decoded) => {
+    jwt.verify(token, jwtSecret, (err, decoded) => {
         if (err) return res.status(401).send('Invalid token');
         req.user = decoded;
         next();
