@@ -58,7 +58,7 @@ app.post('/users/login', async (req, res) => {
         } else {
             const user = results[0];
             if (await bcrypt.compare(Password, user.Password)) {
-                const token = jwt.sign({ id: user.id, username: user.Username }, jwtSecret, { expiresIn: '1h'});
+                const token = jwt.sign({ id: user.id, username: user.Username, role: user.Role }, jwtSecret, { expiresIn: '1h'});
                 console.log('Login successful, sending token:', token);
                 res.json({ token });
             } else {
@@ -83,10 +83,14 @@ const verifyToken = (req, res, next) => {
     });
 };
 
-app.get('/protected-route', verifyToken, (req, res) => {
-    res.send('This is a protected route');
-});
-
+const verifyRole = (requiredRole) => {
+    return (req, res, next) => {
+        if (req.user.role !== requiredRole) {
+            return (res.status(403).send('You are not allowed to access this resource'));
+        }
+        next();
+    }
+}
 //home-get-post
 app.get('/homenewstbl', async (req, res) => {
     try {
@@ -98,7 +102,7 @@ app.get('/homenewstbl', async (req, res) => {
     }
 });
 
-app.post('/homenewstbl', async (req, res) => {
+app.post('/homenewstbl', verifyRole('Owner'), async (req, res) => {
     try {
         const news = {
             Title: req.body.Title,
