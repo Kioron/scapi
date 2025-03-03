@@ -60,6 +60,9 @@ app.post('/users/login', async (req, res) => {
             if (await bcrypt.compare(Password, user.Password)) {
                 const token = jwt.sign({ id: user.id, username: user.Username, role: user.Role }, jwtSecret, { expiresIn: '1h'});
                 console.log('Login successful, sending token:', token);
+                const decodedToken = jwt.verify(token, jwtSecret);
+                console.log('Decoded token:', decodedToken);
+
                 res.json({ token });
             } else {
                 res.status(401).json('Not Allowed');
