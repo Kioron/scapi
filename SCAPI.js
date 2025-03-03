@@ -58,11 +58,10 @@ app.post('/users/login', async (req, res) => {
         } else {
             const user = results[0];
             if (await bcrypt.compare(Password, user.Password)) {
-                const token = jwt.sign({ id: user.id, username: user.Username, role: user.Role }, jwtSecret, { expiresIn: '1h'});
+                const token = jwt.sign({ id: user.id, username: user.UserName, role: user.Role }, jwtSecret, { expiresIn: '1h'});
                 console.log('Login successful, sending token:', token);
                 const decodedToken = jwt.verify(token, jwtSecret);
                 console.log('Decoded token:', decodedToken);
-
                 res.json({ token });
             } else {
                 res.status(401).json('Not Allowed');
@@ -88,6 +87,8 @@ const verifyToken = (req, res, next) => {
 
 const verifyRole = (requiredRoles) => {
     return (req, res, next) => {
+        console.log('Required roles:', requiredRoles);
+        console.log('User role:', req.user.role);
         if (!requiredRoles.includes(req.user.role)) {
             return (res.status(403).send('You are not allowed to access this resource'));
         }
