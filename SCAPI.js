@@ -60,8 +60,6 @@ app.post('/users/login', async (req, res) => {
             if (await bcrypt.compare(Password, user.Password)) {
                 const token = jwt.sign({ id: user.id, username: user.UserName, role: user.Role }, jwtSecret, { expiresIn: '1h'});
                 console.log('Login successful, sending token:', token);
-                const decodedToken = jwt.verify(token, jwtSecret);
-                console.log('Decoded token:', decodedToken);
                 res.json({ token });
             } else {
                 res.status(401).json('Not Allowed');
@@ -76,11 +74,18 @@ app.post('/users/login', async (req, res) => {
 //token verification middleware
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization']?.split(' ')[1];
-    if (!token) return res.status(403).send('Token is required');
+    if (!token) {
+        console.log('Token is required');
+        return res.status(403).send('Token is required');
+    }
 
     jwt.verify(token, jwtSecret, (err, decoded) => {
-        if (err) return res.status(401).send('Invalid token');
+        if (err) {
+            console.log('Invalid token:', err);
+            return res.status(401).send('Invalid token');
+        }
         req.user = decoded;
+        console.log('Decoded token:', decoded);
         next();
     });
 };
@@ -90,8 +95,10 @@ const verifyRole = (requiredRoles) => {
         console.log('Required roles:', requiredRoles);
         console.log('User role:', req.user.role);
         if (!requiredRoles.includes(req.user.role)) {
+            console.log('Access denied: User role is not in the required roles');
             return (res.status(403).send('You are not allowed to access this resource'));
         }
+        console.log('Access granted: User role is in the required roles');
         next();
     };
 };
