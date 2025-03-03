@@ -89,8 +89,8 @@ const verifyRole = (requiredRoles) => {
             return (res.status(403).send('You are not allowed to access this resource'));
         }
         next();
-    }
-}
+    };
+};
 //home-get-post
 app.get('/homenewstbl', async (req, res) => {
     try {
@@ -102,7 +102,7 @@ app.get('/homenewstbl', async (req, res) => {
     }
 });
 
-app.post('/homenewstbl', verifyToken, verifyRole('Owner'), async (req, res) => {
+app.post('/homenewstbl', verifyToken, verifyRole(['Owner']), async (req, res) => {
     try {
         const news = {
             Title: req.body.Title,
@@ -218,7 +218,7 @@ app.get('/emsnewstbl', async (req, res) => {
     }
 });
 
-app.post('/emsnewstbl', async (req, res) => {
+app.post('/emsnewstbl', verifyToken, verifyRole(['Owner', 'EMS Chief']), async (req, res) => {
     try {
         const news = {
             Title: req.body.Title,
@@ -287,7 +287,7 @@ app.get('/mechanicsnewstbl', async (req, res) => {
     }
 });
 
-app.post('/mechanicsnewstbl', async (req,res) => {
+app.post('/mechanicsnewstbl', verifyToken, verifyRole(['Owner', 'Mechanics Chief']), async (req,res) => {
     try {
         const news = {
             Title: req.body.Title,
