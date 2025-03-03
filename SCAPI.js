@@ -102,7 +102,7 @@ app.get('/homenewstbl', async (req, res) => {
     }
 });
 
-app.post('/homenewstbl', verifyRole('Owner'), async (req, res) => {
+app.post('/homenewstbl', verifyToken, verifyRole('Owner'), async (req, res) => {
     try {
         const news = {
             Title: req.body.Title,
