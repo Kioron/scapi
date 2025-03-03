@@ -83,9 +83,9 @@ const verifyToken = (req, res, next) => {
     });
 };
 
-const verifyRole = (requiredRole) => {
+const verifyRole = (requiredRoles) => {
     return (req, res, next) => {
-        if (req.user.role !== requiredRole) {
+        if (!requiredRoles.includes(req.user.role)) {
             return (res.status(403).send('You are not allowed to access this resource'));
         }
         next();
@@ -148,7 +148,7 @@ app.get('/policenewstbl', async (req, res) => {
     }
 });
 
-app.post('policenewstbl', async (req, res) => {
+app.post('/policenewstbl', verifyToken, verifyRole(['Owner', 'Police Chief']), async (req, res) => {
     try {
         const news = {
             Title: req.body.Title,
