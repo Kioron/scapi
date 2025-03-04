@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home page RP server</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="/scripts/Script.js" defer></script>
+</head>
+<body>
+
+  <header class="header">
+    <div class="nav-toggle">
+      <img src="/images/Menu.png" alt="Menu Icon" class="menu-icon" width="50" height="50" nav-toggle>
+    </div>
+    <nav class="nav">
+      <a href="/index.html" class="nav-btn">Home</a>
+      <div class="nav-btn dropdown-toggle">Factions</div>
+      <div class="dropdown-content">
+        <a href="PoliceDepartment.html">Police Department</a>
+        <a href="Mechanics.html">Mechanics</a>
+        <a href="EMS.html">Medical Department</a>
+      </div>
+      <a href="Shop.html" class="nav-btn">Shop</a>
+      <div class="nav-btn">Contact</div>
+    </nav>
+    <div class="title">SUMMERCITY WEBSITE</div>
+    <div class="auth-buttons">
+      <div class="login-btn">Login</div>
+    </div>
+  </header>
+
+  <div class="overlay"></div>
+
+  <main class="main">
+    <section class="intro">
+      <h1 class="title">Mechanics</h1>
+      <p class="description">
+        We are the biggest roleplay server in the Unturned game. 
+        We offer great roleplay experience, many different legal jobs and activities, you can also become a police officer, join EMS or become a car mechanic. 
+        You can also launch your own business and manage it however you want. We also have highly developed crime activities, you can create your own criminal group or join one. 
+        Come and play with us today!
+      </p>
+      <button class="discord-btn">Join Discord</button>
+    </section>
+
+    <div class="space"></div>
+
+    <section class="news">
+      <h2 class="section-title">Mechanics Announcements</h2>
+        <div class="news-grid" announcements-mechanics-container>
+          <template announcements-mechanics-template>
+            <article class="news-item">
+              <h3 class="news-heading" announcements-mechanics-heading></h3>
+              <p class="news-content" announcements-mechanics-description></p>
+            </article>
+          </template> 
+        </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Footer/Contact Information</p>
+  </footer>
+</body>
+</html>
