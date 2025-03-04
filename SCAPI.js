@@ -216,6 +216,8 @@ app.post('/policeannouncementtbl', async (req, res) => {
     }
 });
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/html/PoliceOnly.html', verifyToken, verifyRole(['Owner', 'Police Chief', 'Police']), (req, res) => {
     res.sendFile(path.join(__dirname, 'html', 'PoliceOnly.html'));
 });
