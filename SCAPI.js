@@ -92,8 +92,6 @@ const verifyToken = (req, res, next) => {
 
 const verifyRole = (requiredRoles) => {
     return (req, res, next) => {
-        console.log('Required roles:', requiredRoles);
-        console.log('User role:', req.user.role);
         if (!requiredRoles.includes(req.user.role)) {
             console.log('Access denied: User role is not in the required roles');
             return (res.status(403).send('You are not allowed to access this resource'));
@@ -218,7 +216,7 @@ app.post('/policeannouncementtbl', async (req, res) => {
     }
 });
 
-app.get('/html/PoliceOnly.html', verifyRole(['Owner', 'Police Chief', 'Police']), (req, res) => {
+app.get('/html/PoliceOnly.html', verifyToken, verifyRole(['Owner', 'Police Chief', 'Police']), (req, res) => {
     res.sendFile(path.join(__dirname, 'html', 'PoliceOnly.html'));
 });
 //ems-get-post
@@ -290,7 +288,7 @@ app.post('/emsannouncementtbl', async (req, res) => {
     }
 });
 
-app.get('/html/EMSOnly.html', verifyRole(['Owner', 'EMS Chief', 'EMS']), (req, res) => {
+app.get('/html/EMSOnly.html', verifyToken, verifyRole(['Owner', 'EMS Chief', 'EMS']), (req, res) => {
     res.sendFile(path.join(__dirname, 'html', 'EMSOnly.html'));
 });
 
@@ -363,7 +361,7 @@ app.post('/mechanicsannouncementtbl', async (req, res) => {
     }
 });
 
-app.get('/html/MechanicsOnly.html', verifyRole(['Owner', 'Mechanics Chief', 'Mechanics']), (req, res) => {
+app.get('/html/MechanicsOnly.html', verifyToken, verifyRole(['Owner', 'Mechanics Chief', 'Mechanics']), (req, res) => {
     res.sendFile(path.join(__dirname, 'html', 'MechanicsOnly.html'));
 });
 
