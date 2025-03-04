@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
@@ -216,10 +217,10 @@ app.post('/policeannouncementtbl', async (req, res) => {
     }
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'restricted')));
 
-app.get('/html/PoliceOnly.html', verifyToken, verifyRole(['Owner', 'Police Chief', 'Police']), (req, res) => {
-    res.sendFile(path.join(__dirname, 'html', 'PoliceOnly.html'));
+app.get('/restricted/PoliceOnly.html', verifyToken, verifyRole(['Owner', 'Police Chief', 'Police']), (req, res) => {
+    res.sendFile(path.join(__dirname, 'restricted', 'PoliceOnly.html'));
 });
 //ems-get-post
 app.get('/emsnewstbl', async (req, res) => {
@@ -290,8 +291,8 @@ app.post('/emsannouncementtbl', async (req, res) => {
     }
 });
 
-app.get('/html/EMSOnly.html', verifyToken, verifyRole(['Owner', 'EMS Chief', 'EMS']), (req, res) => {
-    res.sendFile(path.join(__dirname, 'html', 'EMSOnly.html'));
+app.get('/restricted/EMSOnly.html', verifyToken, verifyRole(['Owner', 'EMS Chief', 'EMS']), (req, res) => {
+    res.sendFile(path.join(__dirname, 'restricted', 'EMSOnly.html'));
 });
 
 //mechanics-get-post
@@ -363,8 +364,8 @@ app.post('/mechanicsannouncementtbl', async (req, res) => {
     }
 });
 
-app.get('/html/MechanicsOnly.html', verifyToken, verifyRole(['Owner', 'Mechanics Chief', 'Mechanics']), (req, res) => {
-    res.sendFile(path.join(__dirname, 'html', 'MechanicsOnly.html'));
+app.get('/restricted/MechanicsOnly.html', verifyToken, verifyRole(['Owner', 'Mechanics Chief', 'Mechanics']), (req, res) => {
+    res.sendFile(path.join(__dirname, 'restricted', 'MechanicsOnly.html'));
 });
 
 app.listen(port, () => {
