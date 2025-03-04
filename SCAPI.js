@@ -216,8 +216,11 @@ app.post('/policeannouncementtbl', async (req, res) => {
         res.status(500).send('Error creating announcement');
 
     }
-})
+});
 
+app.get('/html/PoliceOnly.html', verifyRole(['Owner', 'Police Chief', 'Police']), (req, res) => {
+    res.sendFile(path.join(__dirname, 'html', 'PoliceOnly.html'));
+});
 //ems-get-post
 app.get('/emsnewstbl', async (req, res) => {
     try {
@@ -287,6 +290,10 @@ app.post('/emsannouncementtbl', async (req, res) => {
     }
 });
 
+app.get('/html/EMSOnly.html', verifyRole(['Owner', 'EMS Chief', 'EMS']), (req, res) => {
+    res.sendFile(path.join(__dirname, 'html', 'EMSOnly.html'));
+});
+
 //mechanics-get-post
 app.get('/mechanicsnewstbl', async (req, res) => {
     try {
@@ -354,6 +361,10 @@ app.post('/mechanicsannouncementtbl', async (req, res) => {
     } catch (err) {
         res.status(500).send(err);
     }
+});
+
+app.get('/html/MechanicsOnly.html', verifyRole(['Owner', 'Mechanics Chief', 'Mechanics']), (req, res) => {
+    res.sendFile(path.join(__dirname, 'html', 'MechanicsOnly.html'));
 });
 
 app.listen(port, () => {
