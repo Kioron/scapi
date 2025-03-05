@@ -8,6 +8,9 @@ const bcrypt = require('bcrypt');
 const app = express();
 const port = 3000;
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'restricted'));
+
 app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'restricted')));
@@ -220,10 +223,15 @@ app.post('/policeannouncementtbl', async (req, res) => {
     }
 });
 
-app.get('/restricted/PoliceOnly.html', verifyToken, verifyRole(['Owner', 'Police Chief', 'Police']), (req, res) => {
-    //res.sendFile(path.join(__dirname, 'restricted', 'PoliceOnly.html'));
-    res.redirect('https://scapi-nine.vercel.app/restricted/PoliceOnly.html');
+app.get('/restricted/PoliceOnly.html', verifyToken, verifyRole(['Owner', 'Police Chief', 'Police']), async (req, res) => {
+    try {
+        const [announcements] = await pool.query('SELECT * FROM PoliceAnnouncementtbl');
+        res.render('PoliceOnly', { announcements });
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
+
 //ems-get-post
 app.get('/emsnewstbl', async (req, res) => {
     try {
