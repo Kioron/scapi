@@ -10,6 +10,7 @@ const port = 3000;
 
 app.use(express.json());
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'restricted')));
 
 const pool = mysql.createPool({
     host: 'b5dip6jker9pcnf3utnu-mysql.services.clever-cloud.com',
@@ -135,9 +136,10 @@ app.get('/homecommenttbl', async (req, res) => {
     }
 });
 
-app.post('/homecommenttbl', async (req, res) => {
+app.post('/homecommenttbl', verifyToken, async (req, res) => {
     try {
         const comments = {
+            UserName: req.body.UserName,
             Content: req.body.Content,
         };
         const [result] = await pool.query('INSERT INTO HomeCommenttbl SET ?', comments);
@@ -216,8 +218,6 @@ app.post('/policeannouncementtbl', async (req, res) => {
 
     }
 });
-
-app.use(express.static(path.join(__dirname, 'restricted')));
 
 app.get('/restricted/PoliceOnly.html', verifyToken, verifyRole(['Owner', 'Police Chief', 'Police']), (req, res) => {
     res.sendFile(path.join(__dirname, 'restricted', 'PoliceOnly.html'));
