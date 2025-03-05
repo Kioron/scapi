@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home page RP server</title>
+  <link rel="stylesheet" href="stylesheets/style.css">
+  <script src="scripts/Script.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <div class="nav-toggle">
+      <img src="images/Menu.png" alt="Menu Icon" class="menu-icon" width="50" height="50" nav-toggle>
+    </div>
+    <nav class="nav">
+      <a href="index.html" class="nav-btn">Home</a>
+      <button class="nav-btn dropdown-toggle">Factions</button>
+      <div class="dropdown-content">
+        <a href="html/PoliceDepartment.html">Police Department</a>
+        <a href="html/Mechanics.html">Mechanics</a>
+        <a href="html/EMS.html">Medical Department</a>
+      </div>
+      <a href="html/Shop.html" class="nav-btn">Shop</a>
+    </nav>
+    <div class="title">SUMMERCITY WEBSITE</div>
+    <div class="auth-wrapper">
+      <button class="login-btn" id="login-button">Login</button>
+      <!-- Login form dropdown -->
+      <div class="dropdown-login">
+        <form id="loginForm">
+        <div class="login-wrapper">
+          <h3>Enter your user name</h3>
+          <input class="login-username" id="loginUserName" type="text" placeholder ="Your Name" required>
+        </div>
+        <div class="login-wrapper">
+          <h3>Enter your password</h3>
+          <input class="login-password" id="loginPassword" type="password" placeholder ="Enter password" required>
+        </div>
+        <button class="login-acc" type="submit">Login</button>
+        </form>
+        <div class="register-btn">
+          <a href="html/RegistrationPage.html">No account? Register here!</a>
+        </div>
+      </div>
+      <div id="logoutSection">
+        <span id="userNameDisplay"></span>
+        <button id="logoutButton">Logout</button>
+    </div>
+    </div>
+  </header>
+
+  <div class="overlay"></div>
+
+  <main class="main">
+    <section class="intro">
+      <h1 class="title">Summercity Roleplay Server</h1>
+      <p class="description">
+        We are the biggest roleplay server in the Unturned game. 
+        We offer great roleplay experience, many different legal jobs and activities, you can become a police officer, join EMS or become a car mechanic. 
+        You can also launch your own business and manage it however you want. We also have highly developed crime activities, you can create your own criminal group or join one. 
+        Come and play with us today!
+      </p>
+      <h1 class="title">What is Unturned?</h1>
+      <p class="description">
+        Unturned is a free-to-play survival game developed by Smartly Dressed Games. 
+        It is a sandbox game in which you can play in single-player or multiplayer mode. 
+        The game is set in a post-apocalyptic world, where players must survive against zombies and other players. 
+        Players can build bases, scavenge for supplies, and fight off zombies and other players. 
+        The game has a large and active community, with many mods and custom maps available. 
+        Unturned is available on Steam for Windows, Mac, and Linux.
+      </p>
+      <div class="button-container-intro">
+        <a href="https://store.steampowered.com/app/304930/Unturned/" class="game-btn">Unturned on Steam</a>
+      </div>
+      <h1 class="title">What is a Roleplay Server?</h1>
+      <p>
+        A roleplay server is a type of multiplayer server where players take on the roles of characters and interact with each other in a virtual world. 
+        Players create characters with unique backstories and personalities, and then act out those characters in the game. 
+        Roleplay servers can be based on a wide variety of themes, from fantasy worlds to modern cities. 
+        Players can engage in a wide range of activities, from socializing and exploring to fighting and questing. 
+        Roleplay servers often have rules and guidelines to ensure that players stay in character and create an immersive and enjoyable experience for everyone. <br><br>
+        Images from the game and our server:<br><br>
+      </p>
+      <div class="pictures-grid">
+          <article class="picture-item">
+            <img class="picture-image" src="/images/Server.png" alt="Roleplay image" width="100%" height="100%">
+          </article>
+          <article class="picture-item">
+            <img class="picture-image" src="/images/Server2.png" alt="Roleplay image" width="100%" height="100%">
+          </article>
+          <article class="picture-item">
+            <img class="picture-image" src="/images/Server 3.png" alt="Roleplay image" width="100%" height="100%">
+          </article>
+          <article class="picture-item">
+            <img class="picture-image" src="/images/Server 4.png" alt="Roleplay image" width="100%" height="100%">
+          </article>
+          <article class="picture-item">
+            <img class="picture-image" src="/images/Server 5.png" alt="Roleplay image" width="100%" height="100%">
+          </article>
+          <article class="picture-item">
+            <img class="picture-image" src="/images/Server 6.png" alt="Roleplay image" width="100%" height="100%">
+          </article>
+      </div>
+    </section>
+
+    <div class="space"></div>
+
+    <section class="news">
+      <div class="news-section-heading">
+        <h2 class="section-title">News Section</h2>
+        <button id="togglenewsForm">Publish news</button>
+      </div>
+      <div class="news-form" id="newsForm">
+        <form id="newsMainForm">
+          <div class="news-form-wrapper">
+            <h3>Add news title</h3>
+            <input class="news-form-heading" id="newsmainHeading" type="text" placeholder="News Heading" required>
+          </div>
+          <div class="news-form-wrapper">
+            <h3>Add news content</h3>
+            <input class="news-form-content" id="newsmainContent" type="text" placeholder="News Content" required>
+          </div>
+          <div class="button-container">
+          <button id="publish-news">Publish news</button>
+          <button id="cancel-news">Cancel</button>
+        </div>
+      </form>
+      </div>
+      <div class="news-grid" news-main-grid>
+        <template news-main-template>
+          <article class="news-item">
+            <h3 class="news-heading" news-main-heading></h3>
+            <p class="news-date" news-main-date></p>
+            <p class="news-content" news-main-description></p>
+          </article>
+        </template>
+      </div>
+    </section>
+
+    <div class="space"></div>
+
+    <section class="staff">
+      <h2 class="section-title">Staff Members</h2>
+      <ul class="staff-list">
+        <li>SolsticeHorizon - Owner</li>
+        <li>ShadowPhantom - HeadAdmin</li>
+        <li>Pacific - Admin</li>
+        <li>StaticPixel - Admin</li>
+      </ul>
+      <h3 class="sub-title">Faction Leaders:</h3>
+      <ul class="factions">
+        <li>Police Department - Harry57</li>
+        <li>EMS - Bery</li>
+        <li>Mechanics - Dani93</li>
+      </ul>
+    </section>
+
+    <div class="space"></div>
+
+    <section class="comments">
+      <h2 class="section-title">Comment Section</h2>
+      <form id="commentsMainForm">
+      <input class="comment-box" id="comment-main-input" placeholder="Write a comment here"></input>
+      <button class="publish-btn" type="submit">Publish</button>
+      </form>
+      <div class="comment-list" comments-main-container>
+        <template comments-main-template>
+          <div class="comment">
+            <p comments-main-username></p> 
+            <p comments-main-date></p>
+            <p class ="comment-content" comments-main-description></p>
+          </div>
+        </template>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Footer/Contact Information</p>
+  </footer>
+</body>
+</html>
