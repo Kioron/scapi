@@ -183,9 +183,10 @@ app.get('/policecommenttbl', async (req, res) => {
     }
 });
 
-app.post('/policecommenttbl', async (req, res) => {
+app.post('/policecommenttbl', verifyToken, async (req, res) => {
     try {
         const comments = {
+            UserName: req.body.UserName,
             Content: req.body.Content,
         };
         const [result] = await pool.query('INSERT INTO PoliceCommenttbl SET ?', comments);
@@ -256,9 +257,10 @@ app.get('/emscommenttbl', async (req, res) => {
     }
 });
 
-app.post('/emscommenttbl', async (req, res) => {
+app.post('/emscommenttbl', verifyToken, async (req, res) => {
     try {
         const comments = {
+            UserName: req.body.UserName,
             Content: req.body.Content,
         }
         const [result] = await pool.query('INSERT INTO EMSCommenttbl SET ?', comments);
@@ -329,9 +331,10 @@ app.get('/mechanicscommenttbl', async (req, res) => {
     }
 });
 
-app.post('/mechanicscommenttbl', async (req, res) => {
+app.post('/mechanicscommenttbl', verifyToken, async (req, res) => {
     try {
         const comments = {
+            UserName: req.body.UserName,
             Content: req.body.Content,
         }
         const [result] = await pool.query('INSERT INTO MechanicsCommenttbl SET ?', comments);
