@@ -41,7 +41,26 @@
     <div class="space"></div>
 
     <section class="news">
-      <h2 class="section-title">Police Announcements</h2>
+      <div class="news-section-heading">
+        <h2 class="section-title">Police Announcements</h2>
+        <button id="togglenewsForm">Publish announcement</button>
+      </div>
+      <div class="news-form" id="newsForm">
+        <form id="newsMainForm">
+          <div class="news-form-wrapper">
+            <h3>Add news title</h3>
+            <input class="news-form-heading" id="announcementspoliceHeading" type="text" placeholder="News Heading" required>
+          </div>
+          <div class="news-form-wrapper">
+            <h3>Add news content</h3>
+            <input class="news-form-content" id="announcementspoliceContent" type="text" placeholder="News Content" required>
+          </div>
+          <div class="button-container">
+          <button id="publish-news">Publish news</button>
+          <button id="cancel-news">Cancel</button>
+        </div>
+      </form>
+      </div>
         <div class="news-grid" announcements-police-container>
           <% announcements.forEach(announcement => { %>
             <article class="news-item">
