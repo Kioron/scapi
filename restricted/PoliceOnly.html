@@ -32,12 +32,10 @@
     <section class="intro">
       <h1 class="title">Police Department</h1>
       <p class="description">
-        We are the biggest roleplay server in the Unturned game. 
-        We offer great roleplay experience, many different legal jobs and activities, you can also become a police officer, join EMS or become a car mechanic. 
-        You can also launch your own business and manage it however you want. We also have highly developed crime activities, you can create your own criminal group or join one. 
-        Come and play with us today!
+        This is a restricted subpage for the members of Police faction only!
+        Here you can find all of the information and announcements that are relevant to the Police faction.
+        Do not share with this information to anyone outside of the Police faction.
       </p>
-      <button class="discord-btn">Join Discord</button>
     </section>
 
     <div class="space"></div>
@@ -45,12 +43,20 @@
     <section class="news">
       <h2 class="section-title">Police Announcements</h2>
         <div class="news-grid" announcements-police-container>
-          <template announcements-police-template>
+          <!-- <template announcements-police-template>
               <article class="news-item">
                 <h3 class="news-heading" announcements-police-heading></h3>
+                <p class="news-date" announcements-police-date></p>
                 <p class="news-content" announcements-police-description></p>
               </article>
-          </template> 
+          </template>  -->
+          <% announcements.forEach(announcement => { %>
+            <article class="news-item">
+              <h3 class="news-heading"><%= announcement.Title %></h3>
+              <p class="news-date"><%= new Date(announcement.created_at).toLocaleDateString() %></p>
+              <p class="news-content"><%= announcement.Content %></p>
+            </article>
+          <% }) %>
         </div>
     </section>
   </main>
