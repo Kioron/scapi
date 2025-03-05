@@ -221,7 +221,8 @@ app.post('/policeannouncementtbl', async (req, res) => {
 });
 
 app.get('/restricted/PoliceOnly.html', verifyToken, verifyRole(['Owner', 'Police Chief', 'Police']), (req, res) => {
-    res.sendFile(path.join(__dirname, 'restricted', 'PoliceOnly.html'));
+    //res.sendFile(path.join(__dirname, 'restricted', 'PoliceOnly.html'));
+    res.redirect('https://scapi-nine.vercel.app/restricted/PoliceOnly.html');
 });
 //ems-get-post
 app.get('/emsnewstbl', async (req, res) => {
