@@ -76,6 +76,12 @@ app.post('/users/login', async (req, res) => {
     }
 });
 
+app.post('/users/refresh-token', verifyToken, (req, res) => {
+    const { id, username, role } = req.user;
+    const newToken = jwt.sign({ id, username, role }, jwtSecret, { expiresIn: '1h' });
+    res.json({ token: newToken });
+});
+
 //token verification middleware
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization']?.split(' ')[1];
@@ -209,7 +215,7 @@ app.get('/policeannouncementtbl', async (req, res) => {
     }
 });
 
-app.post('/policeannouncementtbl', async (req, res) => {
+app.post('/policeannouncementtbl', verifyToken, verifyRole(['Owner', 'Police Chief']), async (req, res) => {
     try {
         const announcements = {
             Title: req.body.Title,
@@ -220,15 +226,6 @@ app.post('/policeannouncementtbl', async (req, res) => {
     } catch (err) {
         res.status(500).send('Error creating announcement');
 
-    }
-});
-
-app.get('/restricted/PoliceOnly.html', verifyToken, verifyRole(['Owner', 'Police Chief', 'Police']), async (req, res) => {
-    try {
-        const [announcements] = await pool.query('SELECT * FROM PoliceAnnouncementtbl');
-        res.render('PoliceOnly', { announcements });
-    } catch (err) {
-        res.status(500).send(err);
     }
 });
 
@@ -289,7 +286,7 @@ app.get('/emsannouncementtbl', async (req, res) => {
     }
 });
 
-app.post('/emsannouncementtbl', async (req, res) => {
+app.post('/emsannouncementtbl', verifyToken, verifyRole(['Owner', 'EMS Chief']), async (req, res) => {
     try{
         const announcements = {
             Title: req.body.Title,
@@ -300,10 +297,6 @@ app.post('/emsannouncementtbl', async (req, res) => {
     } catch (err) {
         res.status(500).send(err);
     }
-});
-
-app.get('/restricted/EMSOnly.html', verifyToken, verifyRole(['Owner', 'EMS Chief', 'EMS']), (req, res) => {
-    res.sendFile(path.join(__dirname, 'restricted', 'EMSOnly.html'));
 });
 
 //mechanics-get-post
@@ -363,7 +356,7 @@ app.get('/mechanicsannouncementtbl', async (req, res) => {
     }
 });
 
-app.post('/mechanicsannouncementtbl', async (req, res) => {
+app.post('/mechanicsannouncementtbl', verifyToken, verifyRole(['Owner', 'Mechanics Chief']), async (req, res) => {
     try {
         const announcements = {
             Title: req.body.Title,
@@ -374,10 +367,6 @@ app.post('/mechanicsannouncementtbl', async (req, res) => {
     } catch (err) {
         res.status(500).send(err);
     }
-});
-
-app.get('/restricted/MechanicsOnly.html', verifyToken, verifyRole(['Owner', 'Mechanics Chief', 'Mechanics']), (req, res) => {
-    res.sendFile(path.join(__dirname, 'restricted', 'MechanicsOnly.html'));
 });
 
 app.listen(port, () => {
