@@ -76,11 +76,11 @@ app.post('/users/login', async (req, res) => {
     }
 });
 
-app.post('/users/refresh-token', verifyToken, (req, res) => {
-    const { id, username, role } = req.user;
-    const newToken = jwt.sign({ id, username, role }, jwtSecret, { expiresIn: '1h' });
-    res.json({ token: newToken });
-});
+// app.post('/users/refresh-token', verifyToken, (req, res) => {
+//     const { id, username, role } = req.user;
+//     const newToken = jwt.sign({ id, username, role }, jwtSecret, { expiresIn: '1h' });
+//     res.json({ token: newToken });
+// });
 
 //token verification middleware
 const verifyToken = (req, res, next) => {
