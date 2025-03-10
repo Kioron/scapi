@@ -369,6 +369,199 @@ app.post('/mechanicsannouncementtbl', verifyToken, verifyRole(['Owner', 'Mechani
     }
 });
 
+//updating comments
+app.put('/homecomments/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    const { Content } = req.body;
+    try {
+        const [result] = await pool.query('UPDATE HomeCommenttbl SET Content = ? WHERE id = ? AND UserName = ?', [Content, id, req.user.UserName]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to update this comment');
+        }
+        res.send('Comment updated successfully');
+    } catch (err) {
+        res.status(500).send('Error updating comment');
+    }
+});
+
+app.put('/policecomments/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    const { Content } = req.body;
+    try {
+        const [result] = await pool.query('UPDATE PoliceCommenttbl SET Content = ? WHERE id = ? AND UserName = ?', [Content, id, req.user.UserName]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to update this comment');
+        }
+        res.send('Comment updated successfully');
+    } catch (err) {
+        res.status(500).send('Error updating comment');
+    }
+});
+
+app.put('/emscomments/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    const { Content } = req.body;
+    try {
+        const [result] = await pool.query('UPDATE EMSCommenttbl SET Content = ? WHERE id = ? AND UserName = ?', [Content, id, req.user.UserName]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to update this comment');
+        }
+        res.send('Comment updated successfully');
+    } catch (err) {
+        res.status(500).send('Error updating comment');
+    }
+});
+
+app.put('/mechanicscomments/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    const { Content } = req.body;
+    try {
+        const [result] = await pool.query('UPDATE MechanicsCommenttbl SET Content = ? WHERE id = ? AND UserName = ?', [Content, id, req.user.UserName]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to update this comment');
+        }
+        res.send('Comment updated successfully');
+    } catch (err) {
+        res.status(500).send('Error updating comment');
+    }
+});
+
+//deleting comments
+app.delete('/homecomments/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [result] = await pool.query('DELETE FROM Comments WHERE id = ? AND UserName = ?', [id, req.user.UserName]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to delete this comment');
+        }
+        res.send('Comment deleted successfully');
+    } catch (err) {
+        res.status(500).send('Error deleting comment');
+    }
+});
+
+app.delete('/policecomments/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [result] = await pool.query('DELETE FROM PoliceCommenttbl WHERE id = ? AND UserName = ?', [id, req.user.UserName]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to delete this comment');
+        }
+        res.send('Comment deleted successfully');
+    } catch (err) {
+        res.status(500).send('Error deleting comment');
+    }
+});
+
+app.delete('/emscomments/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [result] = await pool.query('DELETE FROM EMSCommenttbl WHERE id = ? AND UserName = ?', [id, req.user.UserName]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to delete this comment');
+        }
+        res.send('Comment deleted successfully');
+    } catch (err) {
+        res.status(500).send('Error deleting comment');
+    }
+});
+
+app.delete('/mechanicscomments/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [result] = await pool.query('DELETE FROM MechanicsCommenttbl WHERE id = ? AND UserName = ?', [id, req.user.UserName]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to delete this comment');
+        }
+        res.send('Comment deleted successfully');
+    } catch (err) {
+        res.status(500).send('Error deleting comment');
+    }
+});
+
+//updating announcement
+app.put('/policeannouncements/:id', verifyToken, verifyRole(['Owner', 'Police Chief']), async (req, res) => {
+    const { id } = req.params;
+    const { Title, Content } = req.body;
+    try {
+        const [result] = await pool.query('UPDATE PoliceAnnouncementtbl SET Title = ?, Content = ? WHERE id = ?', [Title, Content, id]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to update this announcement');
+        }
+        res.send('Announcement updated successfully');
+    } catch (err) {
+        res.status(500).send('Error updating announcement');
+    }
+});
+
+app.put('/emsannouncements/:id', verifyToken, verifyRole(['Owner', 'EMS Chief']), async (req, res) => {
+    const { id } = req.params;
+    const { Title, Content } = req.body;
+    try {
+        const [result] = await pool.query('UPDATE EMSAnnouncementtbl SET Title = ?, Content = ? WHERE id = ?', [Title, Content, id]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to update this announcement');
+        }
+        res.send('Announcement updated successfully');
+    } catch (err) {
+        res.status(500).send('Error updating announcement');
+    }
+});
+
+app.put('/mechanicsannouncements/:id', verifyToken, verifyRole(['Owner', 'Mechanics Chief']), async (req, res) => {
+    const { id } = req.params;
+    const { Title, Content } = req.body;
+    try {
+        const [result] = await pool.query('UPDATE MechacnisAnnouncementtbl SET Title = ?, Content = ? WHERE id = ?', [Title, Content, id]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to update this announcement');
+        }
+        res.send('Announcement updated successfully');
+    } catch (err) {
+        res.status(500).send('Error updating announcement');
+    }
+});
+
+//deleting announcement
+app.delete('/policeannouncements/:id', verifyToken, verifyRole(['Owner', 'Police Chief']), async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [result] = await pool.query('DELETE FROM PoliceAnnouncementtbl WHERE id = ?', [id]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to delete this announcement');
+        }
+        res.send('Announcement deleted successfully');
+    } catch (err) {
+        res.status(500).send('Error deleting announcement');
+    }
+});
+
+app.delete('/emsannouncements/:id', verifyToken, verifyRole(['Owner', 'EMS Chief']), async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [result] = await pool.query('DELETE FROM EMSAnnouncementtbl WHERE id = ?', [id]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to delete this announcement');
+        }
+        res.send('Announcement deleted successfully');
+    } catch (err) {
+        res.status(500).send('Error deleting announcement');
+    }
+});
+
+app.delete('/mechanicsannouncements/:id', verifyToken, verifyRole(['Owner', 'Mechanics Chief']), async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [result] = await pool.query('DELETE FROM MechanicsAnnouncementtbl WHERE id = ?', [id]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to delete this announcement');
+        }
+        res.send('Announcement deleted successfully');
+    } catch (err) {
+        res.status(500).send('Error deleting announcement');
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
