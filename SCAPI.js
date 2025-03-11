@@ -63,7 +63,7 @@ app.post('/users/login', async (req, res) => {
         } else {
             const user = results[0];
             if (await bcrypt.compare(Password, user.Password)) {
-                const token = jwt.sign({ id: user.id, username: user.UserName, role: user.Role }, jwtSecret, { expiresIn: '1h'});
+                const token = jwt.sign({ id: user.id, username: user.UserName, role: user.Role }, jwtSecret, { expiresIn: '1h' });
                 console.log('Login successful, sending token:', token);
                 res.json({ token });
             } else {
@@ -177,7 +177,7 @@ app.post('/policenewstbl', verifyToken, verifyRole(['Owner', 'Police Chief']), a
         };
         const [result] = await pool.query('INSERT INTO PoliceNewstbl SET ?', news);
         res.status(201).send('News created successfully');
-    } catch(err) {
+    } catch (err) {
         res.status(500).send(err);
     }
 })
@@ -287,7 +287,7 @@ app.get('/emsannouncementtbl', async (req, res) => {
 });
 
 app.post('/emsannouncementtbl', verifyToken, verifyRole(['Owner', 'EMS Chief']), async (req, res) => {
-    try{
+    try {
         const announcements = {
             Title: req.body.Title,
             Content: req.body.Content,
@@ -310,7 +310,7 @@ app.get('/mechanicsnewstbl', async (req, res) => {
     }
 });
 
-app.post('/mechanicsnewstbl', verifyToken, verifyRole(['Owner', 'Mechanics Chief']), async (req,res) => {
+app.post('/mechanicsnewstbl', verifyToken, verifyRole(['Owner', 'Mechanics Chief']), async (req, res) => {
     try {
         const news = {
             Title: req.body.Title,
@@ -369,12 +369,16 @@ app.post('/mechanicsannouncementtbl', verifyToken, verifyRole(['Owner', 'Mechani
     }
 });
 
+//updating news
+
+//deleting news
+
 //updating comments
 app.put('/homecomments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { Content } = req.body;
     try {
-        const [result] = await pool.query('UPDATE HomeCommenttbl SET Content = ? WHERE id = ? AND UserName = ?', [Content, id, req.user.UserName]);
+        const [result] = await pool.query('UPDATE HomeCommenttbl SET Content = ? WHERE id = ? AND UserName = ?', [Content, id, req.user.username]);
         if (result.affectedRows === 0) {
             return res.status(403).send('You are not allowed to update this comment');
         }
@@ -388,7 +392,7 @@ app.put('/policecomments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { Content } = req.body;
     try {
-        const [result] = await pool.query('UPDATE PoliceCommenttbl SET Content = ? WHERE id = ? AND UserName = ?', [Content, id, req.user.UserName]);
+        const [result] = await pool.query('UPDATE PoliceCommenttbl SET Content = ? WHERE id = ? AND UserName = ?', [Content, id, req.user.username]);
         if (result.affectedRows === 0) {
             return res.status(403).send('You are not allowed to update this comment');
         }
@@ -402,7 +406,7 @@ app.put('/emscomments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { Content } = req.body;
     try {
-        const [result] = await pool.query('UPDATE EMSCommenttbl SET Content = ? WHERE id = ? AND UserName = ?', [Content, id, req.user.UserName]);
+        const [result] = await pool.query('UPDATE EMSCommenttbl SET Content = ? WHERE id = ? AND UserName = ?', [Content, id, req.user.username]);
         if (result.affectedRows === 0) {
             return res.status(403).send('You are not allowed to update this comment');
         }
@@ -416,7 +420,7 @@ app.put('/mechanicscomments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const { Content } = req.body;
     try {
-        const [result] = await pool.query('UPDATE MechanicsCommenttbl SET Content = ? WHERE id = ? AND UserName = ?', [Content, id, req.user.UserName]);
+        const [result] = await pool.query('UPDATE MechanicsCommenttbl SET Content = ? WHERE id = ? AND UserName = ?', [Content, id, req.user.username]);
         if (result.affectedRows === 0) {
             return res.status(403).send('You are not allowed to update this comment');
         }
@@ -430,7 +434,7 @@ app.put('/mechanicscomments/:id', verifyToken, async (req, res) => {
 app.delete('/homecomments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     try {
-        const [result] = await pool.query('DELETE FROM Comments WHERE id = ? AND UserName = ?', [id, req.user.UserName]);
+        const [result] = await pool.query('DELETE FROM HomeCommenttbl WHERE id = ? AND UserName = ?', [id, req.user.username]);
         if (result.affectedRows === 0) {
             return res.status(403).send('You are not allowed to delete this comment');
         }
@@ -443,7 +447,7 @@ app.delete('/homecomments/:id', verifyToken, async (req, res) => {
 app.delete('/policecomments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     try {
-        const [result] = await pool.query('DELETE FROM PoliceCommenttbl WHERE id = ? AND UserName = ?', [id, req.user.UserName]);
+        const [result] = await pool.query('DELETE FROM PoliceCommenttbl WHERE id = ? AND UserName = ?', [id, req.user.username]);
         if (result.affectedRows === 0) {
             return res.status(403).send('You are not allowed to delete this comment');
         }
@@ -456,7 +460,7 @@ app.delete('/policecomments/:id', verifyToken, async (req, res) => {
 app.delete('/emscomments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     try {
-        const [result] = await pool.query('DELETE FROM EMSCommenttbl WHERE id = ? AND UserName = ?', [id, req.user.UserName]);
+        const [result] = await pool.query('DELETE FROM EMSCommenttbl WHERE id = ? AND UserName = ?', [id, req.user.username]);
         if (result.affectedRows === 0) {
             return res.status(403).send('You are not allowed to delete this comment');
         }
@@ -469,7 +473,7 @@ app.delete('/emscomments/:id', verifyToken, async (req, res) => {
 app.delete('/mechanicscomments/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     try {
-        const [result] = await pool.query('DELETE FROM MechanicsCommenttbl WHERE id = ? AND UserName = ?', [id, req.user.UserName]);
+        const [result] = await pool.query('DELETE FROM MechanicsCommenttbl WHERE id = ? AND UserName = ?', [id, req.user.username]);
         if (result.affectedRows === 0) {
             return res.status(403).send('You are not allowed to delete this comment');
         }
