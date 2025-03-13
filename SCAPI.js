@@ -426,7 +426,7 @@ app.put('/mechanicsnews/:id', verifyToken, verifyRole(['Owner', 'Mechanics Chief
     }
 });
 //deleting news
-app.delete('homenews:/id', verifyToken, verifyRole('Owner'), async (req, res) => {
+app.delete('homenews/:id', verifyToken, verifyRole('Owner'), async (req, res) => {
     const { id } = req.params
     try {
         const [result] = await pool.query('DELETE FROM HomeNewstbl WHERE id = ?', [id]);
@@ -439,7 +439,7 @@ app.delete('homenews:/id', verifyToken, verifyRole('Owner'), async (req, res) =>
     }
 });
 
-app.delete('policenews:/id', verifyToken, verifyRole(['Owner', 'Police Chief']), async (req, res) => {
+app.delete('policenews/:id', verifyToken, verifyRole(['Owner', 'Police Chief']), async (req, res) => {
     const { id } = req.params
     try {
         const [result] = await pool.query('DELETE FROM PoliceNewstbl WHERE id = ?', [id]);
@@ -452,7 +452,7 @@ app.delete('policenews:/id', verifyToken, verifyRole(['Owner', 'Police Chief']),
     }
 });
 
-app.delete('emsnews:/id', verifyToken, verifyRole(['Owner', 'EMS Chief']), async (req, res) => {
+app.delete('emsnews/:id', verifyToken, verifyRole(['Owner', 'EMS Chief']), async (req, res) => {
     const { id } = req.params
     try {
         const [result] = await pool.query('DELETE FROM EMSNewstbl WHERE id = ?', [id]);
@@ -465,7 +465,7 @@ app.delete('emsnews:/id', verifyToken, verifyRole(['Owner', 'EMS Chief']), async
     }
 });
 
-app.delete('mechanicsnews:/id', verifyToken, verifyRole(['Owner', 'Mechanics Chief']), async (req, res) => {
+app.delete('mechanicsnews/:id', verifyToken, verifyRole(['Owner', 'Mechanics Chief']), async (req, res) => {
     const { id } = req.params
     try {
         const [result] = await pool.query('DELETE FROM MechanicsNewstbl WHERE id = ?', [id]);
