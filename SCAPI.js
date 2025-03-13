@@ -63,7 +63,7 @@ app.post('/users/login', async (req, res) => {
         } else {
             const user = results[0];
             if (await bcrypt.compare(Password, user.Password)) {
-                const token = jwt.sign({ id: user.id, username: user.UserName, role: user.Role }, jwtSecret, { expiresIn: '1h' });
+                const token = jwt.sign({ id: user.id, username: user.UserName, role: user.Role }, jwtSecret, { expiresIn: '24h' });
                 console.log('Login successful, sending token:', token);
                 res.json({ token });
             } else {
@@ -370,8 +370,113 @@ app.post('/mechanicsannouncementtbl', verifyToken, verifyRole(['Owner', 'Mechani
 });
 
 //updating news
+app.put('/homenews/:id', verifyToken, verifyRole('Owner'), async (req, res) => {
+    const { id } = req.params
+    const {Title, Content} = req.body
+    try {
+        const [result] = await pool.query('UPDATE HomeNewstbl SET Title = ?, Content = ? WHERE id = ?', [Title, Content, id]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to update this news');
+        }
+        res.send('News updated successfully');
+    } catch (err) {
+        res.status(500).send('Error updating the news');
+    }
+});
 
+app.put('/policenews/:id', verifyToken, verifyRole(['Owner', 'Police Chief']), async (req, res) => {
+    const { id } = req.params
+    const {Title, Content} = req.body
+    try {
+        const [result] = await pool.query('UPDATE PoliceNewstbl SET Title = ?, Content = ? WHERE id = ?', [Title, Content, id]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to update this news');
+        }
+        res.send('News updated successfully');
+    } catch (err) {
+        res.status(500).send('Error updating the news');
+    }
+});
+
+app.put('/emsnews/:id', verifyToken, verifyRole(['Owner', 'EMS Chief']), async (req, res) => {
+    const { id } = req.params
+    const {Title, Content} = req.body
+    try {
+        const [result] = await pool.query('UPDATE EMSNewstbl SET Title = ?, Content = ? WHERE id = ?', [Title, Content, id]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to update this news');
+        }
+        res.send('News updated successfully');
+    } catch (err) {
+        res.status(500).send('Error updating the news');
+    }
+});
+
+app.put('/mechanicsnews/:id', verifyToken, verifyRole(['Owner', 'Mechanics Chief']), async (req, res) => {
+    const { id } = req.params
+    const {Title, Content} = req.body
+    try {
+        const [result] = await pool.query('UPDATE MechanicsNewstbl SET Title = ?, Content = ? WHERE id = ?', [Title, Content, id]);
+        if (result.affectedRows === 0) {
+            return res.status(403).send('You are not allowed to update this news');
+        }
+        res.send('News updated successfully');
+    } catch (err) {
+        res.status(500).send('Error updating the news');
+    }
+});
 //deleting news
+app.delete('homenews:/id', verifyToken, verifyRole('Owner'), async (req, res) => {
+    const { id } = req.params
+    try {
+        const [result] = await pool.query('DELETE FROM HomeNewstbl WHERE id = ?', [id]);
+        if (result.affectedrows === 0) {
+            return res.status(403).send('You are not allowed to delete this news');
+        }
+        res.send('News deleted successfully');
+    } catch (err) {
+        res.status(500).send('Error deleting the news');
+    }
+});
+
+app.delete('policenews:/id', verifyToken, verifyRole(['Owner', 'Police Chief']), async (req, res) => {
+    const { id } = req.params
+    try {
+        const [result] = await pool.query('DELETE FROM PoliceNewstbl WHERE id = ?', [id]);
+        if (result.affectedrows === 0) {
+            return res.status(403).send('You are not allowed to delete this news');
+        }
+        res.send('News deleted successfully');
+    } catch (err) {
+        res.status(500).send('Error deleting the news');
+    }
+});
+
+app.delete('emsnews:/id', verifyToken, verifyRole(['Owner', 'EMS Chief']), async (req, res) => {
+    const { id } = req.params
+    try {
+        const [result] = await pool.query('DELETE FROM EMSNewstbl WHERE id = ?', [id]);
+        if (result.affectedrows === 0) {
+            return res.status(403).send('You are not allowed to delete this news');
+        }
+        res.send('News deleted successfully');
+    } catch (err) {
+        res.status(500).send('Error deleting the news');
+    }
+});
+
+app.delete('mechanicsnews:/id', verifyToken, verifyRole(['Owner', 'Mechanics Chief']), async (req, res) => {
+    const { id } = req.params
+    try {
+        const [result] = await pool.query('DELETE FROM MechanicsNewstbl WHERE id = ?', [id]);
+        if (result.affectedrows === 0) {
+            return res.status(403).send('You are not allowed to delete this news');
+        }
+        res.send('News deleted successfully');
+    } catch (err) {
+        res.status(500).send('Error deleting the news');
+    }
+});
 
 //updating comments
 app.put('/homecomments/:id', verifyToken, async (req, res) => {
