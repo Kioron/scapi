@@ -621,7 +621,7 @@ app.put('/mechanicsannouncements/:id', verifyToken, verifyRole(['Owner', 'Mechan
     const { id } = req.params;
     const { Title, Content } = req.body;
     try {
-        const [result] = await pool.query('UPDATE MechcanicsAnnouncementtbl SET Title = ?, Content = ? WHERE id = ?', [Title, Content, id]);
+        const [result] = await pool.query('UPDATE MechanicsAnnouncementtbl SET Title = ?, Content = ? WHERE id = ?', [Title, Content, id]);
         if (result.affectedRows === 0) {
             return res.status(403).send('You are not allowed to update this announcement');
         }
