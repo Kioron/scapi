@@ -292,7 +292,7 @@ app.post('/emsannouncementtbl', verifyToken, verifyRole(['Owner', 'EMS Chief']),
             Title: req.body.Title,
             Content: req.body.Content,
         }
-        const [result] = await pool.query('INSERT INTO EMSAnnouncmenttbl SET ?', announcements);
+        const [result] = await pool.query('INSERT INTO EMSAnnouncementtbl SET ?', announcements);
         res.status(201).send('Announcement created successfully');
     } catch (err) {
         res.status(500).send(err);
@@ -621,7 +621,7 @@ app.put('/mechanicsannouncements/:id', verifyToken, verifyRole(['Owner', 'Mechan
     const { id } = req.params;
     const { Title, Content } = req.body;
     try {
-        const [result] = await pool.query('UPDATE MechacnisAnnouncementtbl SET Title = ?, Content = ? WHERE id = ?', [Title, Content, id]);
+        const [result] = await pool.query('UPDATE MechcanicsAnnouncementtbl SET Title = ?, Content = ? WHERE id = ?', [Title, Content, id]);
         if (result.affectedRows === 0) {
             return res.status(403).send('You are not allowed to update this announcement');
         }
