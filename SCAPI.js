@@ -111,39 +111,21 @@ const verifyRole = (requiredRoles) => {
         next();
     };
 };
+
 //home-get-post
-// app.get('/homenewstbl', async (req, res) => {
-//     const { page = 1, limit = 5 } = req.query;
-//     const offset = (page - 1) * limit;
-//     try {
-//         const [rows] = await pool.query('SELECT * FROM HomeNewstbl');
-//         res.json(rows);
-//     } catch (err) {
-//         console.error('Error fetching home news:', err);
-//         res.status(500).send(err);
-//     }
-// });
 
 app.get('/homenewstbl', async (req, res) => {
-    const { page = 1, limit = 5 } = req.query;
+    const { page = 1, limit = 6 } = req.query;
     const offset = (page - 1) * limit;
-
     try {
-        const [rows] = await pool.query(
-            'SELECT * FROM HomeNewstbl ORDER BY created_at DESC LIMIT ? OFFSET ?',
-            [parseInt(limit), parseInt(offset)]
-        );
-        const [totalRows] = await pool.query('SELECT COUNT(*) as total FROM HomeNewstbl');
-        const total = totalRows[0].total;
-         
-        const hasMore = offset + rows.length < total;
-
-        res.json({ news: rows, hasMore });
+        const [rows] = await pool.query('SELECT * FROM HomeNewstbl');
+        res.json(rows);
     } catch (err) {
         console.error('Error fetching home news:', err);
-        res.status(500).send('Error fetching home news');
+        res.status(500).send(err);
     }
 });
+
 
 app.post('/homenewstbl', verifyToken, verifyRole(['Owner']), async (req, res) => {
     try {
