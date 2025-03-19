@@ -115,8 +115,6 @@ const verifyRole = (requiredRoles) => {
 //home-get-post
 
 app.get('/homenewstbl', async (req, res) => {
-    const { page = 1, limit = 6 } = req.query;
-    const offset = (page - 1) * limit;
     try {
         const [rows] = await pool.query('SELECT * FROM HomeNewstbl');
         res.json(rows);
