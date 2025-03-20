@@ -125,31 +125,26 @@ const verifyRole = (requiredRoles) => {
 // });
 
 app.get('/homenewstbl', async (req, res) => {
-    let { page = 1, limit = 5 } = req.query; // Default to page 1 and 5 items per page
+    let { page = 1, limit = 3 } = req.query;
 
-    // Convert page and limit to integers and validate them
     page = parseInt(page);
     limit = parseInt(limit);
     if (isNaN(page) || page < 1) page = 1;
-    if (isNaN(limit) || limit < 1) limit = 5;
+    if (isNaN(limit) || limit < 1) limit = 3;
 
-    const offset = (page - 1) * limit; // Calculate the offset for SQL query
+    const offset = (page - 1) * limit;
 
     try {
-        // Fetch the paginated news
         const [rows] = await pool.query(
             'SELECT * FROM HomeNewstbl ORDER BY created_at DESC LIMIT ? OFFSET ?',
             [limit, offset]
         );
 
-        // Fetch the total count of news
         const [totalRows] = await pool.query('SELECT COUNT(*) as total FROM HomeNewstbl');
         const total = totalRows[0].total;
 
-        // Determine if there are more rows to load
         const hasMore = offset + rows.length < total;
 
-        // Send the paginated news along with the "hasMore" flag
         res.json({ news: rows, hasMore });
     } catch (err) {
         console.error('Error fetching home news:', err);
