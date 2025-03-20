@@ -125,12 +125,12 @@ const verifyRole = (requiredRoles) => {
 // });
 
 app.get('/homenewstbl', async (req, res) => {
-    let { page = 1, limit = 3 } = req.query;
+    let { page = 1, limit = 5 } = req.query;
 
     page = parseInt(page);
     limit = parseInt(limit);
     if (isNaN(page) || page < 1) page = 1;
-    if (isNaN(limit) || limit < 1) limit = 3;
+    if (isNaN(limit) || limit < 1) limit = 5;
 
     const offset = (page - 1) * limit;
 
