@@ -673,6 +673,81 @@ app.delete('/mechanicsannouncements/:id', verifyToken, verifyRole(['Owner', 'Mec
     }
 });
 
+//usersmanagement
+app.get('/users/owner', verifyToken, verifyRole(['Owner']), async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT id, username, role FROM UserManagementtbl');
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching users for owner:', err);
+        res.status(500).send('Error fetching users');
+    }
+});
+
+app.get('/users/police', verifyToken, verifyRole(['Police Chief']), async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            'SELECT id, username, role FROM UserManagementtbl WHERE role = "Police" OR role = "Member"'
+        );
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching users for police chief:', err);
+        res.status(500).send('Error fetching users');
+    }
+});
+
+app.get('/users/ems', verifyToken, verifyRole(['EMS Chief']), async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            'SELECT id, username, role FROM UserManagementtbl WHERE role = "EMS" OR role = "Member"'
+        );
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching users for EMS chief:', err);
+        res.status(500).send('Error fetching users');
+    }
+});
+
+app.get('/users/mechanics', verifyToken, verifyRole(['Mechanics Chief']), async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            'SELECT id, username, role FROM UserManagementtbl WHERE role = "Mechanics" OR role = "Member"'
+        );
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching users for mechanics chief:', err);
+        res.status(500).send('Error fetching users');
+    }
+});
+
+app.put('/users/:id', verifyToken, verifyRole(['Owner', 'Police Chief', 'EMS Chief', 'Mechanics Chief']), async (req, res) => {
+    const { id } = req.params;
+    const { role } = req.body;
+    const { role: userRole } = req.user;
+
+    // Restrict faction chiefs to updating roles within their faction
+    const allowedRoles = {
+        'Police Chief': ['Police', 'Member'],
+        'EMS Chief': ['EMS', 'Member'],
+        'Mechanics Chief': ['Mechanics', 'Member'],
+    };
+
+    if (userRole !== 'Owner' && !allowedRoles[userRole]?.includes(role)) {
+        return res.status(403).send('Unauthorized to update this role');
+    }
+
+    try {
+        const [result] = await pool.query('UPDATE UserManagementtbl SET role = ? WHERE id = ?', [role, id]);
+        if (result.affectedRows === 0) {
+            return res.status(404).send('User not found or role not updated');
+        }
+        res.send('User role updated successfully');
+    } catch (err) {
+        console.error('Error updating user role:', err);
+        res.status(500).send('Error updating user role');
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
